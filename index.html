@@ -168,6 +168,7 @@
 
       <div class="play-row">
         <button class="icon-btn big" onclick="playCurrent()">🔊 きく（ネイティブ）</button>
+        <button class="icon-btn" onclick="beepTest()">🔔 音テスト</button>
       </div>
       <div id="pVoiceStatus" style="min-height:18px;font-size:13px;text-align:center;margin:4px 0 2px;color:#2a8a6a;"></div>
       <div class="speedbox">
@@ -284,6 +285,21 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* ============ エラーを画面に強制表示（スマホで原因を見るため） ============ */
+function showFatal(msg){
+  try{
+    var bar=document.getElementById('__err');
+    if(!bar){ bar=document.createElement('div'); bar.id='__err';
+      bar.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#c0392b;color:#fff;font-size:12px;line-height:1.4;padding:8px;white-space:pre-wrap;';
+      bar.onclick=function(){ bar.remove(); };
+      (document.body||document.documentElement).appendChild(bar);
+    }
+    bar.textContent='⚠ '+msg+'\n（タップで閉じる）';
+  }catch(_){}
+}
+window.addEventListener('error', function(e){ showFatal((e.message||'JSエラー')+(e.lineno?(' @行'+e.lineno):'')); });
+window.addEventListener('unhandledrejection', function(e){ showFatal('Promiseエラー: '+((e.reason&&e.reason.message)||e.reason||'?')); });
+
 /* ============ データ（中1向け 基本セット） ============ */
 const WORDS = [
   ["cat","ねこ"],["dog","いぬ"],["book","本"],["pen","ペン"],["desk","つくえ"],
@@ -465,6 +481,21 @@ function deviceSpeak(text, rate){
   return true;
 }
 
+// 端末が音を出せるか切り分けるテスト（TTSもネットも使わない純粋なビープ）
+function beepTest(){
+  try{
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC){ setVoiceStatus('この端末はWeb Audio非対応', true); return; }
+    var ctx = beepTest._ctx || (beepTest._ctx = new AC());
+    if(ctx.state==='suspended'){ try{ ctx.resume(); }catch(e){} }
+    var o=ctx.createOscillator(), g=ctx.createGain();
+    o.type='sine'; o.frequency.value=880; g.gain.value=0.25;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    setVoiceStatus('🔔 ビープ再生中（これが聞こえれば端末の音はOK）');
+    o.stop(ctx.currentTime + 0.45);
+  }catch(e){ setVoiceStatus('音テスト失敗: '+e.message, true); }
+}
 function speak(text){
   const rate = S.speed || 1.0;
   stopAudio();
