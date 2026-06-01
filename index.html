@@ -394,10 +394,11 @@ function pickVoice(){
 function ttsURL(text){
   return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q='+encodeURIComponent(text);
 }
-// iOSはタップの瞬間以外で音声再生をブロックするため、外部TTSの非同期取得は鳴らない。
-// iOSでは最初から端末に入っている英語ネイティブ音声をその場で直接鳴らす。
+// スマホ(iOS/Android)はタップの瞬間以外で音声再生をブロックするため、外部TTSの非同期取得は鳴らない。
+// スマホでは最初から端末に入っている英語ネイティブ音声をその場で直接鳴らす。
 var IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
   (/Macintosh/.test(navigator.userAgent) && 'ontouchend' in document);
+var IS_MOBILE = IS_IOS || /Android/i.test(navigator.userAgent) || /Mobi/i.test(navigator.userAgent);
 let currentAudio=null;
 function stopAudio(){
   try{ if(currentAudio){ currentAudio.pause(); currentAudio=null; } }catch(e){}
@@ -418,8 +419,8 @@ function deviceSpeak(text, rate){
 function speak(text){
   const rate = S.speed || 1.0;
   stopAudio();
-  // iPhone/iPadはタップ即時に内蔵ネイティブ音声で鳴らす（外部TTSはブロックされ無音になるため）
-  if(IS_IOS){ deviceSpeak(text, rate); return; }
+  // スマホ(iPhone/Android)はタップ即時に内蔵ネイティブ音声で鳴らす（外部TTSはブロックされ無音になるため）
+  if(IS_MOBILE && ('speechSynthesis' in window)){ deviceSpeak(text, rate); return; }
   // PC等はGoogle翻訳TTSのネイティブ音声、失敗時は内蔵音声へ
   let fellBack=false;
   const fb=()=>{ if(!fellBack){ fellBack=true; deviceSpeak(text, rate); } };
