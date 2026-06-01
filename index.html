@@ -3,25 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>えいご ディクテーション</title>
+<title>由芽専用英語アプリ</title>
 <style>
   :root{
-    --bg:#f4f7fb; --card:#ffffff; --ink:#2b3a55; --sub:#7688a8;
-    --brand:#4f8cff; --brand-d:#2f6ae0; --good:#27c08a; --bad:#ff5d6c;
-    --warn:#ffb020; --gold:#ffcf3f; --soft:#eef3fb; --line:#e3eaf5;
-    --shadow:0 6px 20px rgba(60,90,150,.12);
+    --bg:#eceef3; --card:#ffffff; --ink:#222a37; --sub:#737d8c;
+    --brand:#4a5ad4; --brand-d:#3a47b0; --good:#2f9e76; --bad:#d9536a;
+    --warn:#c0892f; --gold:#bf9a3c; --soft:#f1f3f8; --line:#e2e6ee;
+    --shadow:0 4px 16px rgba(40,55,90,.08);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{
     font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
-    background:linear-gradient(180deg,#eaf1ff,#f4f7fb 240px);
-    color:var(--ink);min-height:100vh;padding:14px;
+    background:linear-gradient(180deg,#e4e7ef,#eceef3 280px);
+    color:var(--ink);min-height:100vh;padding:16px;
     max-width:640px;margin:0 auto;
   }
-  h1{font-size:20px;margin:0;letter-spacing:.5px}
+  h1{font-size:19px;margin:0;letter-spacing:.4px;font-weight:800}
   .muted{color:var(--sub)}
-  .card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+  .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px;border:1px solid #edeff4}
   button{font-family:inherit;cursor:pointer;border:none;border-radius:14px;font-weight:700}
   button:active{transform:translateY(1px)}
   .row{display:flex;gap:10px;align-items:center}
@@ -30,14 +30,14 @@
 
   /* header */
   header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:2px 4px}
-  .logo{display:flex;align-items:center;gap:10px}
-  .logo .emoji{font-size:26px}
-  .streak-chip{background:#fff;border-radius:999px;padding:6px 12px;box-shadow:var(--shadow);font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .emoji{font-size:22px;background:var(--brand);color:#fff;width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(74,90,212,.35)}
+  .streak-chip{background:#fff;border-radius:10px;padding:7px 12px;box-shadow:var(--shadow);border:1px solid var(--line);font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px}
 
   /* tabs */
   .tabs{display:flex;gap:8px;margin-bottom:12px}
-  .tabs button{flex:1;padding:12px;background:#e7eefc;color:var(--sub);font-size:15px;transition:.15s}
-  .tabs button.on{background:var(--brand);color:#fff;box-shadow:0 4px 12px rgba(79,140,255,.4)}
+  .tabs button{flex:1;padding:12px;background:#e3e6f0;color:var(--sub);font-size:15px;transition:.15s}
+  .tabs button.on{background:var(--brand);color:#fff;box-shadow:0 4px 12px rgba(74,90,212,.35)}
 
   /* mode switch */
   .seg{display:flex;background:var(--soft);border-radius:14px;padding:4px;gap:4px}
@@ -47,10 +47,10 @@
   /* practice */
   .prompt-jp{font-size:15px;color:var(--sub);margin:4px 0 14px;text-align:center;min-height:20px}
   .play-area{display:flex;flex-direction:column;align-items:center;gap:12px;margin:8px 0 18px}
-  .play-btn{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#6fa6ff,#2f6ae0);
-    color:#fff;font-size:38px;box-shadow:0 8px 22px rgba(47,106,224,.45);display:flex;align-items:center;justify-content:center}
+  .play-btn{width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#6b78e0,#3a47b0);
+    color:#fff;font-size:32px;box-shadow:0 8px 20px rgba(58,71,176,.4);display:flex;align-items:center;justify-content:center}
   .play-btn.speaking{animation:pulse 1s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,106,224,.45)}70%{box-shadow:0 0 0 16px rgba(47,106,224,0)}100%{box-shadow:0 0 0 0 rgba(47,106,224,0)}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(58,71,176,.4)}70%{box-shadow:0 0 0 14px rgba(58,71,176,0)}100%{box-shadow:0 0 0 0 rgba(58,71,176,0)}}
   .speed{width:100%;max-width:320px}
   .speed label{font-size:13px;color:var(--sub);display:flex;justify-content:space-between;margin-bottom:4px}
   input[type=range]{width:100%;accent-color:var(--brand)}
@@ -88,13 +88,13 @@
   /* goal */
   .goal{display:flex;align-items:center;gap:10px}
   .bar{flex:1;height:14px;background:var(--soft);border-radius:999px;overflow:hidden}
-  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#ffcf3f,#ffb020);border-radius:999px;transition:width .4s}
-  .goal .gtxt{font-size:13px;font-weight:800;color:var(--warn);white-space:nowrap}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#5566d6,#3a47b0);border-radius:999px;transition:width .4s}
+  .goal .gtxt{font-size:13px;font-weight:800;color:var(--brand-d);white-space:nowrap}
 
   /* dot grid */
   .grid{display:grid;grid-template-columns:repeat(20,1fr);gap:5px;margin-top:8px}
   .dot{aspect-ratio:1;border-radius:50%;background:#e3eaf5}
-  .dot.l1{background:#c9def7}.dot.l2{background:#8ec0f5}.dot.l3{background:#4f8cff}.dot.l4{background:#2f6ae0}.dot.l5{background:#ffcf3f}
+  .dot.l1{background:#d2d7f2}.dot.l2{background:#9aa4e6}.dot.l3{background:#5566d6}.dot.l4{background:#3a47b0}.dot.l5{background:#bf9a3c}
   .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--sub);margin-top:10px;align-items:center}
   .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:3px;vertical-align:middle}
 
@@ -128,13 +128,13 @@
 <body>
 
 <header>
-  <div class="logo"><span class="emoji">📣</span><div><h1>えいご きいて かこう</h1><div class="muted small">ディクテーション れんしゅう</div></div></div>
+  <div class="logo"><span class="emoji">英</span><div><h1>由芽専用英語アプリ</h1><div class="muted small">英語の書き取り（ディクテーション）練習</div></div></div>
   <div class="streak-chip">🔥 <span id="streakNum">0</span>日</div>
 </header>
 
 <div class="tabs">
-  <button id="tabPractice" class="on" onclick="showTab('practice')">✏️ れんしゅう</button>
-  <button id="tabCollect" onclick="showTab('collect')">🏆 コレクション</button>
+  <button id="tabPractice" class="on" onclick="showTab('practice')">練習する</button>
+  <button id="tabCollect" onclick="showTab('collect')">学習記録</button>
 </div>
 
 <!-- ============ PRACTICE ============ -->
@@ -152,39 +152,39 @@
   <!-- mode -->
   <div class="card">
     <div class="seg">
-      <button id="modeWord" class="on" onclick="setMode('word')">📝 たんご</button>
-      <button id="modeSent" onclick="setMode('sentence')">💬 たんぶん</button>
+      <button id="modeWord" class="on" onclick="setMode('word')">単語</button>
+      <button id="modeSent" onclick="setMode('sentence')">短文</button>
     </div>
   </div>
 
   <!-- player + input -->
   <div class="card">
-    <div class="prompt-jp" id="promptJp">きいて かいてみよう！</div>
+    <div class="prompt-jp" id="promptJp">音声を聞いて入力しよう</div>
     <div class="play-area">
       <button class="play-btn" id="playBtn" onclick="speakCurrent()">🔊</button>
-      <div class="small muted">きく</div>
+      <div class="small muted">再生</div>
       <div class="speed">
-        <label><span>ゆっくり</span><span id="speedVal">ふつう (1.0x)</span><span>はやい</span></label>
+        <label><span>遅い</span><span id="speedVal">標準 (1.0x)</span><span>速い</span></label>
         <input type="range" id="speed" min="0.5" max="1.25" step="0.05" value="1">
       </div>
-      <div id="voiceNote" class="hidden" style="background:#fff4e0;color:#9a6a00;border:1px solid #ffe0a3;border-radius:12px;padding:10px 12px;font-size:13px;text-align:center;line-height:1.5;width:100%;max-width:360px">
-        ⚠️ このパソコンには <b>英語の こえ</b> が入っていないようです。<br>
-        <b>Microsoft Edge</b> で この ファイルを ひらくと、追加インストールなしで えいごが きこえます。
+      <div id="voiceNote" class="hidden" style="background:#fbf2e0;color:#8a6320;border:1px solid #ecdcb4;border-radius:12px;padding:10px 12px;font-size:13px;text-align:center;line-height:1.6;width:100%;max-width:380px">
+        ⚠️ この環境には<b>英語の音声</b>が見つかりません。<br>
+        <b>Microsoft Edge</b> でこのファイルを開くと、追加インストールなしで英語を再生できます。
       </div>
     </div>
 
     <input class="answer-input" id="answer" type="text" autocomplete="off" autocapitalize="off"
-      autocorrect="off" spellcheck="false" placeholder="ここに 英語を かいてね">
+      autocorrect="off" spellcheck="false" placeholder="ここに英語を入力">
 
     <div class="hintbar">
-      <button class="ghost" onclick="hintCount()">🔢 もじすう</button>
-      <button class="ghost" onclick="hintFirst()">🅰️ さいしょの1もじ</button>
-      <button class="ghost" onclick="showAnswer()">👀 こたえを見る</button>
+      <button class="ghost" onclick="hintCount()">文字数</button>
+      <button class="ghost" onclick="hintFirst()">最初の1文字</button>
+      <button class="ghost" onclick="showAnswer()">答えを見る</button>
     </div>
     <div class="hint-box" id="hintBox"></div>
 
-    <button class="primary" id="checkBtn" onclick="checkAnswer()">こたえあわせ</button>
-    <button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">つぎへ ▶</button>
+    <button class="primary" id="checkBtn" onclick="checkAnswer()">答え合わせ</button>
+    <button class="next-btn hidden" id="nextBtn" onclick="nextQuestion()">次へ ▶</button>
 
     <div class="result hidden" id="result"></div>
   </div>
@@ -194,50 +194,50 @@
 <div id="view-collect" class="hidden">
 
   <div class="stats3">
-    <div class="stat"><div class="n" id="stTotal">0</div><div class="l">のべ もんだい</div></div>
-    <div class="stat"><div class="n" id="stAcc">0%</div><div class="l">せいかいりつ</div></div>
-    <div class="stat"><div class="n" id="stDays">0</div><div class="l">がくしゅう日</div></div>
+    <div class="stat"><div class="n" id="stTotal">0</div><div class="l">のべ問題数</div></div>
+    <div class="stat"><div class="n" id="stAcc">0%</div><div class="l">正解率</div></div>
+    <div class="stat"><div class="n" id="stDays">0</div><div class="l">学習日数</div></div>
   </div>
 
   <div class="card">
-    <div class="section-title">⭐ ポイント &amp; れんぞく</div>
+    <div class="section-title">ポイント＆連続記録</div>
     <div class="row wrap">
       <div class="stat" style="flex:1"><div class="n" id="stPts">0</div><div class="l">ポイント</div></div>
-      <div class="stat" style="flex:1"><div class="n">🔥 <span id="stStreak">0</span></div><div class="l">れんぞく日</div></div>
-      <div class="stat" style="flex:1"><div class="n">🏆 <span id="stBest">0</span></div><div class="l">さいこう れんぞく</div></div>
+      <div class="stat" style="flex:1"><div class="n">🔥 <span id="stStreak">0</span></div><div class="l">連続日数</div></div>
+      <div class="stat" style="flex:1"><div class="n">🏆 <span id="stBest">0</span></div><div class="l">最高連続</div></div>
     </div>
   </div>
 
   <div class="card">
-    <div class="section-title">🏅 バッジ</div>
+    <div class="section-title">獲得バッジ</div>
     <div class="badges" id="badges"></div>
   </div>
 
   <div class="card">
-    <div class="section-title">🟦 がんばった ドット</div>
-    <div class="muted small">こたえあわせ するたびに ふえるよ（1マス＝1もん）</div>
+    <div class="section-title">学習の記録</div>
+    <div class="muted small">答え合わせのたびに1マス増えます（1マス＝1問）</div>
     <div class="grid" id="dotGrid"></div>
     <div class="legend">
-      <span><i style="background:#e3eaf5"></i>これから</span>
-      <span><i style="background:#c9def7"></i>★1</span>
-      <span><i style="background:#8ec0f5"></i>★2</span>
-      <span><i style="background:#4f8cff"></i>★3</span>
-      <span><i style="background:#2f6ae0"></i>★4</span>
-      <span><i style="background:#ffcf3f"></i>★5 マスター</span>
+      <span><i style="background:#e2e6ee"></i>未学習</span>
+      <span><i style="background:#d2d7f2"></i>★1</span>
+      <span><i style="background:#9aa4e6"></i>★2</span>
+      <span><i style="background:#5566d6"></i>★3</span>
+      <span><i style="background:#3a47b0"></i>★4</span>
+      <span><i style="background:#bf9a3c"></i>★5 習得</span>
     </div>
   </div>
 
   <div class="card">
-    <div class="section-title">📚 ことばコレクション <span class="muted small" id="collProg"></span></div>
+    <div class="section-title">単語・短文コレクション <span class="muted small" id="collProg"></span></div>
     <div class="seg" style="margin-bottom:8px">
-      <button id="cwWord" class="on" onclick="setCollMode('word')">たんご</button>
-      <button id="cwSent" onclick="setCollMode('sentence')">たんぶん</button>
+      <button id="cwWord" class="on" onclick="setCollMode('word')">単語</button>
+      <button id="cwSent" onclick="setCollMode('sentence')">短文</button>
     </div>
     <div class="collect" id="collectList"></div>
   </div>
 
   <div class="center small muted" style="margin:14px 0">
-    <button class="ghost" onclick="resetAll()">きろくを ぜんぶ けす</button>
+    <button class="ghost" onclick="resetAll()">学習記録をすべて消去</button>
   </div>
 </div>
 
@@ -246,53 +246,146 @@
 <script>
 /* ===================== DATA ===================== */
 const WORDS = [
-  ["apple","りんご"],["banana","バナナ"],["orange","オレンジ"],["dog","いぬ"],["cat","ねこ"],
-  ["bird","とり"],["fish","さかな"],["rabbit","うさぎ"],["book","ほん"],["pen","ペン"],
-  ["pencil","えんぴつ"],["desk","つくえ"],["chair","いす"],["bag","かばん"],["notebook","ノート"],
-  ["school","がっこう"],["teacher","せんせい"],["student","せいと"],["friend","ともだち"],["family","かぞく"],
-  ["mother","おかあさん"],["father","おとうさん"],["sister","しまい"],["brother","きょうだい"],["baby","あかちゃん"],
-  ["water","みず"],["milk","ぎゅうにゅう"],["juice","ジュース"],["bread","パン"],["rice","ごはん"],
-  ["egg","たまご"],["meat","にく"],["lunch","ひるごはん"],["dinner","ゆうごはん"],["breakfast","あさごはん"],
-  ["red","あか"],["blue","あお"],["green","みどり"],["yellow","きいろ"],["white","しろ"],
-  ["black","くろ"],["pink","ピンク"],["brown","ちゃいろ"],["color","いろ"],["big","おおきい"],
-  ["small","ちいさい"],["long","ながい"],["short","みじかい"],["new","あたらしい"],["old","ふるい"],
-  ["happy","うれしい"],["sad","かなしい"],["good","よい"],["bad","わるい"],["fun","たのしい"],
+  ["apple","りんご"],["banana","バナナ"],["orange","オレンジ"],["dog","犬"],["cat","猫"],
+  ["bird","鳥"],["fish","魚"],["rabbit","うさぎ"],["book","本"],["pen","ペン"],
+  ["pencil","鉛筆"],["desk","机"],["chair","椅子"],["bag","かばん"],["notebook","ノート"],
+  ["school","学校"],["teacher","先生"],["student","生徒"],["friend","友達"],["family","家族"],
+  ["mother","お母さん"],["father","お父さん"],["sister","姉妹"],["brother","兄弟"],["baby","赤ちゃん"],
+  ["water","水"],["milk","牛乳"],["juice","ジュース"],["bread","パン"],["rice","ご飯"],
+  ["egg","卵"],["meat","肉"],["lunch","昼食"],["dinner","夕食"],["breakfast","朝食"],
+  ["red","赤"],["blue","青"],["green","緑"],["yellow","黄色"],["white","白"],
+  ["black","黒"],["pink","ピンク"],["brown","茶色"],["color","色"],["big","大きい"],
+  ["small","小さい"],["long","長い"],["short","短い"],["new","新しい"],["old","古い"],
+  ["happy","うれしい"],["sad","悲しい"],["good","良い"],["bad","悪い"],["fun","楽しい"],
   ["one","1"],["two","2"],["three","3"],["four","4"],["five","5"],
   ["six","6"],["seven","7"],["eight","8"],["nine","9"],["ten","10"],
-  ["Monday","げつようび"],["Tuesday","かようび"],["Wednesday","すいようび"],["Thursday","もくようび"],["Friday","きんようび"],
-  ["spring","はる"],["summer","なつ"],["fall","あき"],["winter","ふゆ"],["morning","あさ"],
-  ["night","よる"],["today","きょう"],["run","はしる"],["walk","あるく"],["jump","とぶ"],
-  ["eat","たべる"],["drink","のむ"],["read","よむ"],["write","かく"],["play","あそぶ"],
-  ["study","べんきょうする"],["sing","うたう"],["swim","およぐ"],["like","すき"],["want","ほしい"],
-  ["go","いく"],["come","くる"]
+  ["Monday","月曜日"],["Tuesday","火曜日"],["Wednesday","水曜日"],["Thursday","木曜日"],["Friday","金曜日"],
+  ["spring","春"],["summer","夏"],["fall","秋"],["winter","冬"],["morning","朝"],
+  ["night","夜"],["today","今日"],["run","走る"],["walk","歩く"],["jump","跳ぶ"],
+  ["eat","食べる"],["drink","飲む"],["read","読む"],["write","書く"],["play","遊ぶ"],
+  ["study","勉強する"],["sing","歌う"],["swim","泳ぐ"],["like","好き"],["want","欲しい"],
+  ["go","行く"],["come","来る"],
+
+  /* ===== 追加語彙（聖和中ディクテーション風・中1レベル 約360語） ===== */
+  /* 動物 */
+  ["tiger","トラ"],["lion","ライオン"],["horse","馬"],["cow","牛"],["pig","ブタ"],
+  ["sheep","ヒツジ"],["monkey","サル"],["elephant","ゾウ"],["bear","クマ"],["panda","パンダ"],
+  ["fox","キツネ"],["mouse","ネズミ"],["frog","カエル"],["snake","ヘビ"],["turtle","カメ"],
+  ["dolphin","イルカ"],["whale","クジラ"],["shark","サメ"],["penguin","ペンギン"],["koala","コアラ"],
+  ["giraffe","キリン"],["zebra","シマウマ"],["octopus","タコ"],["duck","アヒル"],["chicken","ニワトリ"],
+  ["goat","ヤギ"],["owl","フクロウ"],["spider","クモ"],["bee","ハチ"],["butterfly","チョウ"],
+  /* 食べ物・飲み物 */
+  ["cake","ケーキ"],["candy","キャンディー"],["chocolate","チョコレート"],["cookie","クッキー"],["ice cream","アイスクリーム"],
+  ["jam","ジャム"],["honey","ハチミツ"],["sugar","砂糖"],["salt","塩"],["soup","スープ"],
+  ["salad","サラダ"],["pizza","ピザ"],["hamburger","ハンバーガー"],["sandwich","サンドイッチ"],["spaghetti","スパゲッティ"],
+  ["noodle","麺"],["curry","カレー"],["sushi","寿司"],["cheese","チーズ"],["butter","バター"],
+  ["yogurt","ヨーグルト"],["tea","お茶"],["coffee","コーヒー"],["tomato","トマト"],["potato","ジャガイモ"],
+  ["carrot","ニンジン"],["onion","タマネギ"],["corn","トウモロコシ"],["lemon","レモン"],["melon","メロン"],
+  ["grape","ブドウ"],["peach","桃"],["strawberry","イチゴ"],["fruit","果物"],["vegetable","野菜"],
+  /* 教科・学校 */
+  ["gym","体育館"],["math","数学"],["science","理科"],["English","英語"],["Japanese","国語・日本語"],
+  ["history","歴史"],["music","音楽"],["art","美術"],["classroom","教室"],["blackboard","黒板"],
+  ["eraser","消しゴム"],["ruler","定規"],["dictionary","辞書"],["textbook","教科書"],["homework","宿題"],
+  ["test","テスト"],["lesson","授業"],["club","部活"],["uniform","制服"],["chalk","チョーク"],
+  /* 職業 */
+  ["vet","獣医"],["nurse","看護師"],["doctor","医者"],["musician","音楽家"],["pilot","パイロット"],
+  ["singer","歌手"],["dancer","ダンサー"],["farmer","農家"],["dentist","歯医者"],["driver","運転手"],
+  ["writer","作家"],["painter","画家"],["scientist","科学者"],["astronaut","宇宙飛行士"],["actor","俳優"],
+  ["baker","パン屋"],["king","王様"],["queen","女王"],["prince","王子"],["princess","お姫様"],
+  /* 場所・建物 */
+  ["station","駅"],["park","公園"],["zoo","動物園"],["hospital","病院"],["house","家"],
+  ["home","家庭"],["room","部屋"],["kitchen","台所"],["garden","庭"],["shop","店"],
+  ["restaurant","レストラン"],["supermarket","スーパー"],["bank","銀行"],["museum","博物館"],["temple","寺"],
+  ["airport","空港"],["bridge","橋"],["tower","塔"],["castle","城"],["farm","農場"],
+  ["beach","浜辺"],["mountain","山"],["river","川"],["lake","湖"],["sea","海"],
+  ["forest","森"],["library","図書館"],["town","町"],
+  /* 乗り物 */
+  ["car","車"],["bus","バス"],["train","電車"],["taxi","タクシー"],["truck","トラック"],
+  ["ship","船"],["boat","ボート"],["airplane","飛行機"],["bike","自転車"],["rocket","ロケット"],
+  ["subway","地下鉄"],["yacht","ヨット"],["jet","ジェット機"],["helicopter","ヘリコプター"],
+  /* 天気・自然 */
+  ["weather","天気"],["sun","太陽"],["moon","月"],["star","星"],["sky","空"],
+  ["cloud","雲"],["rain","雨"],["snow","雪"],["wind","風"],["rainbow","虹"],
+  ["sunny","晴れの"],["cloudy","曇りの"],["rainy","雨の"],["fire","火"],["ice","氷"],
+  ["flower","花"],["tree","木"],["leaf","葉"],
+  /* 時・月・曜日 */
+  ["January","1月"],["February","2月"],["March","3月"],["April","4月"],["May","5月"],
+  ["June","6月"],["July","7月"],["August","8月"],["September","9月"],["October","10月"],
+  ["November","11月"],["December","12月"],["Saturday","土曜日"],["Sunday","日曜日"],["week","週"],
+  ["month","月（つき）"],["year","年"],["hour","時間"],["minute","分"],["time","時間"],
+  ["clock","時計"],["yesterday","昨日"],["tomorrow","明日"],["weekend","週末"],
+  /* 体 */
+  ["head","頭"],["face","顔"],["eye","目"],["ear","耳"],["nose","鼻"],
+  ["mouth","口"],["tooth","歯"],["hair","髪"],["hand","手"],["arm","腕"],
+  ["leg","脚"],["foot","足"],["finger","指"],["neck","首"],["shoulder","肩"],
+  ["heart","心臓"],
+  /* 服・身につける物 */
+  ["shirt","シャツ"],["T-shirt","Tシャツ"],["pants","ズボン"],["skirt","スカート"],["dress","ドレス"],
+  ["jacket","上着"],["coat","コート"],["sweater","セーター"],["cap","帽子（キャップ）"],["hat","帽子"],
+  ["shoes","靴"],["socks","靴下"],["gloves","手袋"],["scarf","マフラー"],["glasses","眼鏡"],
+  ["umbrella","傘"],
+  /* スポーツ・趣味 */
+  ["soccer","サッカー"],["baseball","野球"],["basketball","バスケットボール"],["tennis","テニス"],["volleyball","バレーボール"],
+  ["swimming","水泳"],["ski","スキー"],["golf","ゴルフ"],["rugby","ラグビー"],["badminton","バドミントン"],
+  ["game","ゲーム"],["movie","映画"],["hobby","趣味"],["sport","スポーツ"],["dance","ダンス"],
+  ["song","歌"],
+  /* 身のまわりの物 */
+  ["ink","インク"],["box","箱"],["circle","円"],["ball","ボール"],["doll","人形"],
+  ["toy","おもちゃ"],["kite","凧"],["balloon","風船"],["key","鍵"],["door","ドア"],
+  ["window","窓"],["wall","壁"],["floor","床"],["lamp","ランプ"],["cup","コップ"],
+  ["glass","グラス"],["dish","皿"],["spoon","スプーン"],["fork","フォーク"],["knife","ナイフ"],
+  ["bottle","瓶"],["towel","タオル"],["phone","電話"],["camera","カメラ"],
+  /* 様子・形容詞 */
+  ["tall","背が高い"],["high","高い"],["low","低い"],["fast","速い"],["slow","遅い"],
+  ["easy","簡単な"],["hard","難しい"],["kind","親切な"],["cute","かわいい"],["pretty","きれいな"],
+  ["beautiful","美しい"],["cool","かっこいい"],["nice","すてきな"],["great","すばらしい"],["strong","強い"],
+  ["weak","弱い"],["young","若い"],["fine","元気な・晴れた"],["dirty","汚い"],["busy","忙しい"],
+  ["hungry","空腹の"],["tired","疲れた"],["sick","病気の"],["important","大切な"],
+  /* 動作・動詞 */
+  ["open","開ける"],["close","閉める"],["start","始める"],["stop","止める"],["make","作る"],
+  ["take","取る"],["give","あげる"],["get","手に入れる"],["have","持っている"],["see","見る"],
+  ["look","見る"],["watch","見る・観る"],["listen","聞く"],["speak","話す"],["talk","話す"],
+  ["say","言う"],["tell","伝える"],["ask","たずねる"],["answer","答える"],["help","助ける"],
+  ["use","使う"],["buy","買う"],["sell","売る"],["cook","料理する"],["clean","掃除する"],
+  ["wash","洗う"],["cut","切る"],["build","建てる"],["draw","描く"],["send","送る"],
+  ["bring","持ってくる"],["carry","運ぶ"],["put","置く"],["find","見つける"],["win","勝つ"],
+  ["catch","つかまえる"],["throw","投げる"],["kick","ける"],["ride","乗る"],["drive","運転する"],
+  ["fly","飛ぶ"],["climb","登る"],["smile","ほほえむ"],["sleep","眠る"],["sit","座る"],
+  ["stand","立つ"],["live","住む"],["work","働く"],["meet","会う"],["visit","訪れる"],
+  ["travel","旅行する"],["enjoy","楽しむ"],["love","愛する"],["think","考える"],["know","知っている"],
+  ["learn","学ぶ"],["teach","教える"],["practice","練習する"],["wait","待つ"],["call","電話する"],
+  /* あいさつ・人 */
+  ["hello","こんにちは"],["goodbye","さようなら"],["yes","はい"],["no","いいえ"],["sorry","ごめんなさい"],
+  ["please","お願いします"],["name","名前"],["birthday","誕生日"],["dream","夢"],["grandmother","祖母"],
+  ["grandfather","祖父"],["aunt","おば"],["uncle","おじ"],["cousin","いとこ"],["people","人々"]
 ];
 
 const SENTENCES = [
-  ["I am a student.","わたしは せいとです。"],
-  ["This is my book.","これは わたしの ほんです。"],
-  ["I like apples.","わたしは りんごが すきです。"],
-  ["She is my friend.","かのじょは わたしの ともだちです。"],
-  ["He plays soccer.","かれは サッカーを します。"],
-  ["I have a dog.","わたしは いぬを かっています。"],
-  ["Open your book.","ほんを ひらいて。"],
-  ["What is this?","これは なに？"],
-  ["How are you?","げんき？"],
-  ["I am fine.","げんきです。"],
-  ["Thank you very much.","どうも ありがとう。"],
+  ["I am a student.","私は生徒です。"],
+  ["This is my book.","これは私の本です。"],
+  ["I like apples.","私はりんごが好きです。"],
+  ["She is my friend.","彼女は私の友達です。"],
+  ["He plays soccer.","彼はサッカーをします。"],
+  ["I have a dog.","私は犬を飼っています。"],
+  ["Open your book.","本を開いて。"],
+  ["What is this?","これは何ですか？"],
+  ["How are you?","元気ですか？"],
+  ["I am fine.","元気です。"],
+  ["Thank you very much.","どうもありがとう。"],
   ["Nice to meet you.","はじめまして。"],
-  ["I go to school.","わたしは がっこうへ いきます。"],
-  ["We are good friends.","わたしたちは なかよしです。"],
-  ["She has a cat.","かのじょは ねこを かっています。"],
-  ["I can swim.","わたしは およげます。"],
-  ["Do you like music?","おんがくは すき？"],
-  ["Let's play together.","いっしょに あそぼう。"],
-  ["It is a nice day.","いい てんきです。"],
-  ["I get up at seven.","わたしは 7じに おきます。"],
-  ["My name is Yuki.","わたしの なまえは ユキです。"],
-  ["I like blue.","わたしは あおが すきです。"],
-  ["This is a big dog.","これは おおきい いぬです。"],
-  ["I study English.","わたしは えいごを べんきょうします。"],
-  ["See you tomorrow.","また あした。"]
+  ["I go to school.","私は学校へ行きます。"],
+  ["We are good friends.","私たちは仲良しです。"],
+  ["She has a cat.","彼女は猫を飼っています。"],
+  ["I can swim.","私は泳げます。"],
+  ["Do you like music?","音楽は好きですか？"],
+  ["Let's play together.","一緒に遊ぼう。"],
+  ["It is a nice day.","いい天気です。"],
+  ["I get up at seven.","私は7時に起きます。"],
+  ["My name is Yuki.","私の名前はユキです。"],
+  ["I like blue.","私は青が好きです。"],
+  ["This is a big dog.","これは大きい犬です。"],
+  ["I study English.","私は英語を勉強します。"],
+  ["See you tomorrow.","また明日。"]
 ];
 
 /* ===================== STATE ===================== */
@@ -363,7 +456,7 @@ function doSpeak(){
   u.onerror = (e)=>{
     btn.classList.remove('speaking');
     if(e && e.error && !['canceled','interrupted','not-allowed'].includes(e.error)){
-      toast("おとが でないときは Chrome か Edge で ひらいてね");
+      toast("音が出ないときは Microsoft Edge で開いてください");
     }
   };
   synth.speak(u);
@@ -374,7 +467,7 @@ function hasEnglishVoice(){
 }
 function speakCurrent(){
   if(!current) return;
-  if(!synth){ toast("この ブラウザは おとが でないみたい。Microsoft Edge で ひらいてね"); return; }
+  if(!synth){ toast("この環境では音声を再生できません。Microsoft Edge で開いてください"); return; }
   // 声リストがまだ読み込めていないことがあるので、その時は少し待って再生
   if(synth.getVoices().length === 0){
     loadVoices();
@@ -387,7 +480,7 @@ function afterVoices(){
   // 英語の声が1つも無い → Edge をすすめる（このパソコンには日本語の声しか入っていない等）
   if(!hasEnglishVoice() && !warnedNoVoice){
     warnedNoVoice = true;
-    toast("英語の こえが ないみたい。Microsoft Edge で ひらくと きこえるよ！");
+    toast("英語の音声が見つかりません。Microsoft Edge で開くと再生できます");
   }
   doSpeak();
 }
@@ -430,7 +523,7 @@ function nextQuestion(){
   document.getElementById('result').innerHTML = "";
   document.getElementById('checkBtn').classList.remove('hidden');
   document.getElementById('nextBtn').classList.add('hidden');
-  document.getElementById('promptJp').textContent = mode==="word" ? "この えいごを きいて かこう！" : "この ぶんを きいて かこう！";
+  document.getElementById('promptJp').textContent = mode==="word" ? "単語を聞いて入力しよう" : "文を聞いて入力しよう";
   setTimeout(speakCurrent, 250);
 }
 
@@ -439,16 +532,16 @@ function hintCount(){
   const letters = current.en.replace(/[^A-Za-z]/g,"").length;
   const words = current.en.trim().split(/\s+/).length;
   document.getElementById('hintBox').textContent =
-    mode==="word" ? `${letters} もじ` : `${words} ご・${current.en.length} もじ`;
+    mode==="word" ? `${letters} 文字` : `${words} 語・${current.en.length} 文字`;
 }
 function hintFirst(){
   if(!current) return;
-  document.getElementById('hintBox').textContent = "さいしょ → " + current.en[0].toUpperCase();
+  document.getElementById('hintBox').textContent = "最初の文字 → " + current.en[0].toUpperCase();
 }
 function showAnswer(){
   if(!current) return;
   revealed = true;
-  document.getElementById('hintBox').innerHTML = "こたえ → <b style='color:var(--brand-d)'>"+escapeHtml(current.en)+"</b>　（うつして かいてみよう）";
+  document.getElementById('hintBox').innerHTML = "答え → <b style='color:var(--brand-d)'>"+escapeHtml(current.en)+"</b>　（写して入力してみよう）";
 }
 
 function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
@@ -490,12 +583,12 @@ function checkAnswer(){
   res.classList.remove('hidden');
   let html = "";
   if(ok){
-    html += `<div class="verdict ok">⭕ せいかい！</div>`;
+    html += `<div class="verdict ok">正解！</div>`;
   }else{
-    html += `<div class="verdict ng">△ おしい！もういちど みてみよう</div>`;
+    html += `<div class="verdict ng">惜しい！もう一度確認しよう</div>`;
     html += `<div class="diff">${diffHtml(user||" ", current.en)}</div>`;
   }
-  html += `<div class="correct-line">こたえ：<b>${escapeHtml(current.en)}</b></div>`;
+  html += `<div class="correct-line">答え：<b>${escapeHtml(current.en)}</b></div>`;
   html += `<div class="meaning">${escapeHtml(current.jp)}</div>`;
   html += `<div class="stars">${"★".repeat(st.lv)}${"☆".repeat(5-st.lv)}</div>`;
   res.innerHTML = html;
@@ -552,20 +645,20 @@ function updateStreak(t){
 /* ===================== BADGES ===================== */
 const BADGE_DEFS = [
   {id:"first", ico:"🌱", name:"はじめの一歩", test:s=>s.total>=1},
-  {id:"ten", ico:"🔟", name:"10もん", test:s=>s.total>=10},
-  {id:"fifty", ico:"5️⃣0️⃣", name:"50もん", test:s=>s.total>=50},
-  {id:"hundred",ico:"💯", name:"100もん", test:s=>s.total>=100},
-  {id:"streak3",ico:"🔥", name:"3日れんぞく", test:s=>s.bestStreak>=3},
-  {id:"streak7",ico:"⚡", name:"1しゅうかん", test:s=>s.bestStreak>=7},
-  {id:"acc90",  ico:"🎯", name:"せいかい90%", test:s=>s.total>=20 && s.correct/s.total>=0.9},
-  {id:"master5",ico:"👑", name:"★5を5こ", test:s=>Object.values(s.stars).filter(x=>x.lv>=5).length>=5},
+  {id:"ten", ico:"🔟", name:"10問達成", test:s=>s.total>=10},
+  {id:"fifty", ico:"🏃", name:"50問達成", test:s=>s.total>=50},
+  {id:"hundred",ico:"💯", name:"100問達成", test:s=>s.total>=100},
+  {id:"streak3",ico:"🔥", name:"3日連続", test:s=>s.bestStreak>=3},
+  {id:"streak7",ico:"⚡", name:"1週間連続", test:s=>s.bestStreak>=7},
+  {id:"acc90",  ico:"🎯", name:"正解率90%", test:s=>s.total>=20 && s.correct/s.total>=0.9},
+  {id:"master5",ico:"👑", name:"★5を5個", test:s=>Object.values(s.stars).filter(x=>x.lv>=5).length>=5},
   {id:"pts500", ico:"💎", name:"500ポイント", test:s=>s.points>=500},
 ];
 function checkBadges(){
   BADGE_DEFS.forEach(b=>{
     if(!S.badges.includes(b.id) && b.test(S)){
       S.badges.push(b.id);
-      toast(`🏅 バッジ ゲット！「${b.name}」`);
+      toast(`バッジ獲得！「${b.name}」`);
     }
   });
 }
@@ -576,7 +669,7 @@ function renderGoal(){
   const pct = Math.min(100, Math.round(c/DAILY_GOAL*100));
   document.getElementById('goalBar').style.width = pct+"%";
   document.getElementById('goalTxt').textContent = `${c} / ${DAILY_GOAL}`;
-  if(c===DAILY_GOAL){ toast("🎉 きょうの もくひょう たっせい！"); }
+  if(c===DAILY_GOAL){ toast("今日の目標達成！おつかれさま"); }
 }
 function refreshHeader(){
   document.getElementById('streakNum').textContent = S.lastDay===today()? S.streak : (S.streak||0);
@@ -646,11 +739,11 @@ function setCollMode(m){
   renderCollectList();
 }
 function resetAll(){
-  if(confirm("ぜんぶの きろくを けします。よろしいですか？")){
+  if(confirm("すべての学習記録を消去します。よろしいですか？")){
     localStorage.removeItem("dictation_v1");
     S = JSON.parse(JSON.stringify(DEFAULT));
     save(); renderCollection(); refreshHeader(); renderGoal();
-    toast("きろくを リセットしました");
+    toast("学習記録をリセットしました");
   }
 }
 
