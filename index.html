@@ -169,6 +169,7 @@
       <div class="play-row">
         <button class="icon-btn big" onclick="playCurrent()">🔊 きく（ネイティブ）</button>
       </div>
+      <div id="pVoiceStatus" style="min-height:18px;font-size:13px;text-align:center;margin:4px 0 2px;color:#2a8a6a;"></div>
       <div class="speedbox">
         <div class="spdlabels"><span>🐢 ゆっくり</span><span id="spdVal">ふつう</span><span>はやい 🐇</span></div>
         <input id="spdSlider" type="range" min="0.5" max="1.25" step="0.05" value="1" oninput="onSpeed(this.value)" />
@@ -399,36 +400,86 @@ function ttsURL(text){
 var IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
   (/Macintosh/.test(navigator.userAgent) && 'ontouchend' in document);
 var IS_MOBILE = IS_IOS || /Android/i.test(navigator.userAgent) || /Mobi/i.test(navigator.userAgent);
+var HAS_TTS = ('speechSynthesis' in window) && ('SpeechSynthesisUtterance' in window);
+
+// 再生状況を画面に表示（実機で何が起きているか分かるように）
+function setVoiceStatus(msg, isErr){
+  var el=document.getElementById('pVoiceStatus');
+  if(el){ el.textContent=msg||''; el.style.color=isErr?'#c0392b':'#2a8a6a'; }
+}
+
+// 初回のユーザー操作で音声エンジンを"解錠"する（iOS/Androidはこれが無いと無音になりやすい）
+var ttsPrimed=false;
+function primeTTS(){
+  if(!HAS_TTS) return;
+  try{ speechSynthesis.getVoices(); }catch(e){}
+  if(ttsPrimed) return;
+  try{
+    var u=new SpeechSynthesisUtterance(' ');
+    u.volume=0; u.lang='en-US';
+    speechSynthesis.speak(u);
+    ttsPrimed=true;
+  }catch(e){}
+}
+if(HAS_TTS){
+  ['touchend','pointerup','click','keydown'].forEach(function(ev){
+    document.addEventListener(ev, primeTTS, {passive:true});
+  });
+}
+
 let currentAudio=null;
 function stopAudio(){
   try{ if(currentAudio){ currentAudio.pause(); currentAudio=null; } }catch(e){}
-  try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){}
+  try{ if(HAS_TTS && (speechSynthesis.speaking||speechSynthesis.pending)) speechSynthesis.cancel(); }catch(e){}
 }
-// 端末内蔵音声。iPhoneは標準で英語ネイティブ音声を内蔵しているのでこれで鳴る。
+
+// 端末内蔵音声。スマホは標準で英語ネイティブ音声を内蔵しているのでこれで鳴る。
 function deviceSpeak(text, rate){
-  if(!('speechSynthesis' in window)) return;
-  try{ speechSynthesis.cancel(); }catch(e){}
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='en-US'; // 声が未取得でも lang 指定で英語ネイティブが選ばれる
-  const v=pickVoice(); if(v){ u.voice=v; u.lang=v.lang; }
-  u.rate=Math.max(0.5,Math.min(1.25, rate||1)); u.pitch=1;
-  try{ speechSynthesis.speak(u); }catch(e){}
-  // iOSで稀に一時停止状態になる対策
+  if(!HAS_TTS){ setVoiceStatus('この端末は音声読み上げに対応していません', true); return false; }
+  primeTTS();
+  try{ if(speechSynthesis.speaking||speechSynthesis.pending) speechSynthesis.cancel(); }catch(e){}
+  var clamped=Math.max(0.5,Math.min(1.25, rate||1));
+  function utterFor(v){
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang=(v&&v.lang)?v.lang:'en-US';
+    if(v) u.voice=v;
+    u.rate=clamped; u.pitch=1; u.volume=1;
+    u.onstart=function(){ setVoiceStatus('🔊 '+(v?v.name:'英語(en-US)')+' で再生中'); };
+    u.onerror=function(e){ setVoiceStatus('音声エラー: '+((e&&e.error)||'不明')+'（音量/マナーモードを確認）', true); };
+    return u;
+  }
+  var v=pickVoice();
+  setVoiceStatus('読み上げ準備中…（英語の声 '+getEnVoices().length+' 個）');
+  try{ speechSynthesis.speak(utterFor(v)); }catch(e){ setVoiceStatus('再生に失敗: '+e.message, true); return false; }
   try{ if(speechSynthesis.paused) speechSynthesis.resume(); }catch(e){}
+  // Android等で初回に声リストが空だと無音になることがある→声が届いたら鳴らし直す
+  if(getEnVoices().length===0){
+    var prev=speechSynthesis.onvoiceschanged, done=false;
+    speechSynthesis.onvoiceschanged=function(){
+      if(prev){ try{ prev(); }catch(e){} }
+      if(done) return; done=true;
+      var vv=pickVoice();
+      if(vv){ try{ speechSynthesis.cancel(); speechSynthesis.speak(utterFor(vv)); }catch(e){} }
+    };
+  }
+  return true;
 }
+
 function speak(text){
   const rate = S.speed || 1.0;
   stopAudio();
-  // スマホ(iPhone/Android)はタップ即時に内蔵ネイティブ音声で鳴らす（外部TTSはブロックされ無音になるため）
-  if(IS_MOBILE && ('speechSynthesis' in window)){ deviceSpeak(text, rate); return; }
-  // PC等はGoogle翻訳TTSのネイティブ音声、失敗時は内蔵音声へ
+  // スマホは内蔵ネイティブ音声を即時再生（外部TTSはジェスチャ制約で無音になるため）
+  if(IS_MOBILE && HAS_TTS){ deviceSpeak(text, rate); return; }
+  // PC等：Google翻訳TTSのネイティブ音声、失敗時は内蔵音声へ
   let fellBack=false;
-  const fb=()=>{ if(!fellBack){ fellBack=true; deviceSpeak(text, rate); } };
+  const fb=()=>{ if(!fellBack){ fellBack=true; if(HAS_TTS){ deviceSpeak(text, rate); } else { setVoiceStatus('音声を再生できませんでした', true); } } };
   try{
+    setVoiceStatus('ネイティブ音声を再生中…');
     const a=new Audio(ttsURL(text));
     a.preservesPitch=true; a.mozPreservesPitch=true; a.webkitPreservesPitch=true;
     a.playbackRate=rate;
     a.addEventListener('loadedmetadata',()=>{ try{ a.playbackRate=rate; }catch(e){} });
+    a.addEventListener('playing',()=>{ setVoiceStatus('🔊 ネイティブ音声で再生中'); });
     a.addEventListener('error', fb);
     currentAudio=a;
     const p=a.play();
@@ -477,7 +528,8 @@ function renderItem(){
   document.getElementById('pFeedback').innerHTML='';
   document.getElementById('pCheck').classList.remove('hide');
   document.getElementById('pNext').classList.add('hide');
-  setTimeout(()=>{ playCurrent(); inp.focus(); }, 250);
+  setVoiceStatus(IS_MOBILE ? '「🔊 きく」をタップすると音が出ます' : '');
+  setTimeout(()=>{ if(!IS_MOBILE) playCurrent(); inp.focus(); }, 250);
 }
 function playCurrent(){
   if(session) speak(session.items[session.idx].en);
