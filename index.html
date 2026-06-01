@@ -450,7 +450,8 @@ function stopAudio(){
 }
 
 // 端末内蔵音声。スマホは標準で英語ネイティブ音声を内蔵しているのでこれで鳴る。
-function deviceSpeak(text, rate){
+// onStarted: 実際に音声合成が鳴り始めたら呼ぶ（無音バグの検知に使う）
+function deviceSpeak(text, rate, onStarted){
   if(!HAS_TTS){ setVoiceStatus('この端末は音声読み上げに対応していません', true); return false; }
   primeTTS();
   try{ if(speechSynthesis.speaking||speechSynthesis.pending) speechSynthesis.cancel(); }catch(e){}
@@ -460,7 +461,7 @@ function deviceSpeak(text, rate){
     u.lang=(v&&v.lang)?v.lang:'en-US';
     if(v) u.voice=v;
     u.rate=clamped; u.pitch=1; u.volume=1;
-    u.onstart=function(){ setVoiceStatus('🔊 '+(v?v.name:'英語(en-US)')+' で再生中'); };
+    u.onstart=function(){ setVoiceStatus('🔊 '+(v?v.name:'英語(en-US)')+' で再生中'); if(onStarted) onStarted(); };
     u.onerror=function(e){ setVoiceStatus('音声エラー: '+((e&&e.error)||'不明')+'（音量/マナーモードを確認）', true); };
     return u;
   }
@@ -481,6 +482,26 @@ function deviceSpeak(text, rate){
   return true;
 }
 
+// Google翻訳TTSのネイティブ音声を<audio>で再生。allowDeviceFB=trueなら失敗時に内蔵音声へ。
+function googleAudio(text, rate, allowDeviceFB){
+  let fellBack=false;
+  const fb=()=>{ if(!fellBack){ fellBack=true;
+    if(allowDeviceFB && HAS_TTS){ deviceSpeak(text, rate); }
+    else { setVoiceStatus('音声を再生できませんでした', true); } } };
+  try{
+    setVoiceStatus('ネイティブ音声を読み込み中…');
+    const a=new Audio(ttsURL(text));
+    a.preservesPitch=true; a.mozPreservesPitch=true; a.webkitPreservesPitch=true;
+    a.playbackRate=rate;
+    a.addEventListener('loadedmetadata',()=>{ try{ a.playbackRate=rate; }catch(e){} });
+    a.addEventListener('playing',()=>{ setVoiceStatus('🔊 ネイティブ音声で再生中'); });
+    a.addEventListener('error', fb);
+    currentAudio=a;
+    const p=a.play();
+    if(p && p.catch) p.catch(fb);
+  }catch(e){ fb(); }
+}
+
 // 端末が音を出せるか切り分けるテスト（TTSもネットも使わない純粋なビープ）
 function beepTest(){
   try{
@@ -499,23 +520,22 @@ function beepTest(){
 function speak(text){
   const rate = S.speed || 1.0;
   stopAudio();
-  // スマホは内蔵ネイティブ音声を即時再生（外部TTSはジェスチャ制約で無音になるため）
-  if(IS_MOBILE && HAS_TTS){ deviceSpeak(text, rate); return; }
+  if(IS_MOBILE && HAS_TTS){
+    // スマホは内蔵ネイティブ音声を即時再生（iOSは外部TTSがジェスチャ制約で無音になるため）
+    var started=false;
+    deviceSpeak(text, rate, function(){ started=true; });
+    // Android等で「再生中と出るのに無音」になる端末の救済：
+    // 一定時間たっても本当に鳴り始めていなければGoogleネイティブ音声に切り替える（iOSは不可なので除外）
+    if(!IS_IOS){
+      setTimeout(function(){
+        var reallySpeaking=false; try{ reallySpeaking=speechSynthesis.speaking; }catch(e){}
+        if(!started && !reallySpeaking){ googleAudio(text, rate, false); }
+      }, 900);
+    }
+    return;
+  }
   // PC等：Google翻訳TTSのネイティブ音声、失敗時は内蔵音声へ
-  let fellBack=false;
-  const fb=()=>{ if(!fellBack){ fellBack=true; if(HAS_TTS){ deviceSpeak(text, rate); } else { setVoiceStatus('音声を再生できませんでした', true); } } };
-  try{
-    setVoiceStatus('ネイティブ音声を再生中…');
-    const a=new Audio(ttsURL(text));
-    a.preservesPitch=true; a.mozPreservesPitch=true; a.webkitPreservesPitch=true;
-    a.playbackRate=rate;
-    a.addEventListener('loadedmetadata',()=>{ try{ a.playbackRate=rate; }catch(e){} });
-    a.addEventListener('playing',()=>{ setVoiceStatus('🔊 ネイティブ音声で再生中'); });
-    a.addEventListener('error', fb);
-    currentAudio=a;
-    const p=a.play();
-    if(p && p.catch) p.catch(fb);
-  }catch(e){ fb(); }
+  googleAudio(text, rate, true);
 }
 
 /* ============ セッション ============ */
